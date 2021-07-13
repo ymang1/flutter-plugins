@@ -3,24 +3,21 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'dart:io' show Platform;
 
-/// Custom Exception for the plugin,
-/// thrown whenever the plugin is used on platforms other than Android
-class NotificationException implements Exception {
-  String _cause;
-
-  NotificationException(this._cause);
-
-  @override
-  String toString() {
-    return _cause;
-  }
-}
-
+/// The event for each notification.
 class NotificationEvent {
+  /// The message in the notification.
   String packageMessage;
+
+  /// The title of the package sending the notification.
   String packageTitle;
+
+  /// The name of the package sending the notification.
   String packageName;
+
+  /// The name of the user sending the notification.
   String userName;
+
+  /// Timestamp of the notification.
   DateTime timeStamp;
 
   NotificationEvent(
@@ -46,9 +43,8 @@ class NotificationEvent {
   }
 
   @override
-  String toString() {
-    return "Notification Event \n Package Name: $packageName \n - Timestamp: $timeStamp \n - Package Title: $packageTitle\n - Package Message: $packageMessage\n - User name: $userName";
-  }
+  String toString() =>
+      "Notification Event - Package Name: $packageName \n - Timestamp: $timeStamp \n - Package Title: $packageTitle\n - Package Message: $packageMessage\n - User name: $userName";
 }
 
 NotificationEvent _notificationEvent(dynamic data) {
@@ -70,7 +66,19 @@ class Notifications {
       }
       return _notificationStream;
     }
-    throw NotificationException(
-        'Notification API exclusively available on Android!');
+    throw NotificationException('Notification API only available on Android!');
+  }
+}
+
+/// Custom Exception for the plugin,
+/// thrown whenever the plugin is used on platforms other than Android
+class NotificationException implements Exception {
+  String _cause;
+
+  NotificationException(this._cause);
+
+  @override
+  String toString() {
+    return _cause;
   }
 }

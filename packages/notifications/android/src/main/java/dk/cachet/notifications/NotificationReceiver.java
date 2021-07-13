@@ -10,8 +10,7 @@ import java.util.HashMap;
 
 /**
  * Receives events from @NotificationListener
- * */
-
+ **/
 public class NotificationReceiver extends BroadcastReceiver {
 
   private EventSink eventSink;
@@ -23,16 +22,18 @@ public class NotificationReceiver extends BroadcastReceiver {
   @RequiresApi(api = VERSION_CODES.JELLY_BEAN_MR2)
   @Override
   public void onReceive(Context context, Intent intent) {
-    /// Unpack intent contents
+    // Unpack intent contents
     String packageName = intent.getStringExtra(NotificationListener.NOTIFICATION_PACKAGE_NAME);
-    String title = intent.getStringExtra(NotificationListener.NOTIFICATION_TITLE);
-    String message = intent.getStringExtra(NotificationListener.NOTIFICATION_MESSAGE);
-
-    /// Send data back via the Event Sink
+    String packageTitle = intent.getStringExtra(NotificationListener.NOTIFICATION_TITLE);
+    String packageMessage = intent.getStringExtra(NotificationListener.NOTIFICATION_MESSAGE);
+    String userName = intent.getStringExtra(NotificationListener.NOTIFICATION_USER_NAME);
+    
+    // Send data back via the Event Sink
     HashMap<String, Object> data = new HashMap<>();
     data.put("packageName", packageName);
-    data.put("title", title);
-    data.put("message", message);
+    data.put("packageTitle", packageTitle);
+    data.put("packageMessage", packageMessage);
+    map.put("userName", userName);
     eventSink.success(data);
   }
 }

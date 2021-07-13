@@ -1,3 +1,7 @@
+## 1.2.0
+* PR[#378](https://github.com/cph-cachet/flutter-plugins/pull/378)
+* PR[#306](https://github.com/cph-cachet/flutter-plugins/pull/306)
+
 ## 1.1.0
 * Rewrote Android plugin in Java
 

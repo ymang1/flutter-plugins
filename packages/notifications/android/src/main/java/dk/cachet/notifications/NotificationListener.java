@@ -17,13 +17,16 @@ import androidx.annotation.RequiresApi;
 public class NotificationListener extends NotificationListenerService {
 
   public static String NOTIFICATION_INTENT = "notification_event";
-  public static String NOTIFICATION_PACKAGE_NAME = "notification_package_name";
-  public static String NOTIFICATION_MESSAGE = "notification_message";
-  public static String NOTIFICATION_TITLE = "notification_title";
+  public static String NOTIFICATION_USER_NAME = "user_name";
+  public static String NOTIFICATION_PACKAGE_NAME = "package_name";
+  public static String NOTIFICATION_PACKAGE_MESSAGE = "package_message";
+  public static String NOTIFICATION_PACKAGE_TITLE = "package_title";
+  public static String NOTIFICATION_PACKAGE_EXTRA = "package_extra";
 
   @RequiresApi(api = VERSION_CODES.KITKAT)
   @Override
   public void onNotificationPosted(StatusBarNotification notification) {
+    String userName = sbn.getUser().toString();
     // Retrieve package name to set as title.
     String packageName = notification.getPackageName();
     // Retrieve extra object from notification to extract payload.
@@ -33,12 +36,18 @@ public class NotificationListener extends NotificationListenerService {
     Intent intent = new Intent(NOTIFICATION_INTENT);
     intent.putExtra(NOTIFICATION_PACKAGE_NAME, packageName);
 
-    if (extras != null) {
-      CharSequence title = extras.getCharSequence(Notification.EXTRA_TITLE);
-      CharSequence text = extras.getCharSequence(Notification.EXTRA_TEXT);
+    if(userName != null){
+      intent.putExtra(NOTIFICATION_USER_NAME, userName);
+  }    
 
-      intent.putExtra(NOTIFICATION_TITLE, title.toString());
-      intent.putExtra(NOTIFICATION_MESSAGE, text.toString());
+    if (extras != null) {
+      CharSequence extraTitle = extras.getCharSequence(Notification.EXTRA_TITLE);
+      if (extraTitle != null)
+        intent.putExtra(NOTIFICATION_PACKAGE_TITLE, extraTitle.toString());
+
+      CharSequence extraText = extras.getCharSequence(Notification.EXTRA_TEXT);
+      if (extraText != null)
+        intent.putExtra(NOTIFICATION_PACKAGE_MESSAGE, extraText.toString());        
     }
     sendBroadcast(intent);
   }
