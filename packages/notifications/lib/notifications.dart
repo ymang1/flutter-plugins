@@ -18,35 +18,36 @@ class NotificationException implements Exception {
 
 class NotificationEvent {
   String packageMessage;
+  String packageTitle;
   String packageName;
-  String title;
+  String userName;
   DateTime timeStamp;
 
   NotificationEvent(
-      {this.packageName, this.title, this.packageMessage, this.timeStamp});
+      {this.packageName,
+      this.packageMessage,
+      this.timeStamp,
+      this.userName,
+      this.packageTitle});
 
   factory NotificationEvent.fromMap(Map<dynamic, dynamic> map) {
     DateTime time = DateTime.now();
     String name = map['packageName'];
-    String message = map['mesage'];
-    String title = map['title'];
+    String message = map['packageMessage'];
+    String user = map['userName'];
+    String title = map['packageTitle'];
 
     return NotificationEvent(
         packageName: name,
-        title: title,
+        packageTitle: title,
         packageMessage: message,
-        timeStamp: time);
+        timeStamp: time,
+        userName: user);
   }
 
   @override
   String toString() {
-    return "Notification Event \n"
-        "Package Name: $packageName \n "
-        "Title: $title \n"
-        "Message: $packageMessage \n"
-        "Timestamp: $timeStamp \n";
-
-
+    return "Notification Event \n Package Name: $packageName \n - Timestamp: $timeStamp \n - Package Title: $packageTitle\n - Package Message: $packageMessage\n - User name: $userName";
   }
 }
 
@@ -56,7 +57,7 @@ NotificationEvent _notificationEvent(dynamic data) {
 
 class Notifications {
   static const EventChannel _notificationEventChannel =
-      EventChannel('notifications');
+      EventChannel('notifications.eventChannel');
 
   Stream<NotificationEvent> _notificationStream;
 
