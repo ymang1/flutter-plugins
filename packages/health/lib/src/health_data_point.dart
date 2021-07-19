@@ -37,19 +37,32 @@ class HealthDataPoint {
     return ms / (1000 * 60);
   }
 
-  /// Converts the [HealthDataPoint] to a json object
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['value'] = this.value;
-    data['unit'] = this.unit;
-    data['date_from'] = this.dateFrom;
-    data['date_to'] = this.dateTo;
-    data['data_type'] = this.type;
-    data['platform_type'] = this.platform;
-    data['source_id'] = this.sourceId;
-    data['source_name'] = this.sourceName;
-    return data;
-  }
+  /// Converts a json object to the [HealthDataPoint]
+  factory HealthDataPoint.fromJson(json) =>
+      HealthDataPoint._(
+          json['value'],
+          HealthDataTypeJsonValue.keys.toList()[HealthDataTypeJsonValue.values.toList().indexOf(json['data_type'])],
+          HealthDataUnitJsonValue.keys.toList()[HealthDataUnitJsonValue.values.toList().indexOf(json['unit'])],
+          DateTime.parse(json['date_from']),
+          DateTime.parse(json['date_to']),
+          PlatformTypeJsonValue.keys.toList()[PlatformTypeJsonValue.values.toList().indexOf(json['platform_type'])],
+          json['platform_type'],
+          json['source_id'],
+          json['source_name']
+      );
+
+  Map<String, dynamic> toJson() =>
+      {
+        'value': value,
+        'data_type': HealthDataTypeJsonValue[type],
+        'unit': HealthDataUnitJsonValue[unit],
+        'date_from': DateFormat('yyyy-MM-dd HH:mm:ss').format(dateFrom),
+        'date_to': DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTo),
+        'platform_type': PlatformTypeJsonValue[platform],
+        'device_id': deviceId,
+        'source_id': sourceId,
+        'source_name': sourceName
+      };
 
   /// Converts the [HealthDataPoint] to a string
   String toString() => '${this.runtimeType} - '
