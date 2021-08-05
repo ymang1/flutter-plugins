@@ -300,7 +300,14 @@ class HealthPlugin(private var channel: MethodChannel? = null) : MethodCallHandl
                         .addOnFailureListener { exception ->
                             healthData.add(
                                 hashMapOf(
-                                    "error" to exception.message))
+                                    "value" to 0,
+                                    "date_from" to 0,
+                                    "date_to" to 0,
+                                    "unit" to "MINUTES",
+                                    "source_name" to "ERROR",
+                                    "source_id" to "ERROR"
+                                )
+                            )
                             activity!!.runOnUiThread { result.success(healthData) }
                             Log.i("FLUTTER_HEALTH::ERROR", exception.message ?: "unknown error")
                             Log.i("FLUTTER_HEALTH::ERROR", exception.stackTrace.toString())
