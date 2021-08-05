@@ -244,6 +244,7 @@ class HealthPlugin(private var channel: MethodChannel? = null) : MethodCallHandl
 
                     activity!!.runOnUiThread { result.success(healthData) }
                 } else {
+                    var healthData: MutableList<Map<String, Any?>> = mutableListOf()
                     // request to the sessions for sleep data
                     val request = SessionReadRequest.Builder()
                         .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
@@ -254,7 +255,6 @@ class HealthPlugin(private var channel: MethodChannel? = null) : MethodCallHandl
                     Fitness.getSessionsClient(activity!!.applicationContext, googleSignInAccount)
                         .readSession(request)
                         .addOnSuccessListener { response ->
-                            var healthData: MutableList<Map<String, Any?>> = mutableListOf()
                             for (session in response.sessions) {
 
                                 // Return sleep time in Minutes if requested ASLEEP data
@@ -298,7 +298,10 @@ class HealthPlugin(private var channel: MethodChannel? = null) : MethodCallHandl
                             activity!!.runOnUiThread { result.success(healthData) }
                         }
                         .addOnFailureListener { exception ->
-                            activity!!.runOnUiThread { result.success(null) }
+                            healthData.add(
+                                hashMapOf(
+                                    "error" to exception.message))
+                            activity!!.runOnUiThread { result.success(healthData) }
                             Log.i("FLUTTER_HEALTH::ERROR", exception.message ?: "unknown error")
                             Log.i("FLUTTER_HEALTH::ERROR", exception.stackTrace.toString())
                         }
