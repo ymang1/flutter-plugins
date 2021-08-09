@@ -217,8 +217,7 @@ class HealthPlugin(private var channel: MethodChannel? = null) : MethodCallHandl
                     typesBuilder.accessSleepSessions(FitnessOptions.ACCESS_READ)
                 }
                 val fitnessOptions = typesBuilder.build()
-                val googleSignInAccount = GoogleSignIn.getAccountForExtension(activity!!.applicationContext, fitnessOptions)
-
+                val googleSignInAccount = GoogleSignIn.getLastSignedInAccount(activity!!.applicationContext)
                 if (dataType != DataType.TYPE_SLEEP_SEGMENT) {
                     val response = Fitness.getHistoryClient(activity!!.applicationContext, googleSignInAccount)
                         .readData(DataReadRequest.Builder()
@@ -315,7 +314,19 @@ class HealthPlugin(private var channel: MethodChannel? = null) : MethodCallHandl
 
                 }
             } catch (e3: Exception) {
-                activity!!.runOnUiThread { result.success(null) }
+                var healthData: MutableList<Map<String, Any?>> = mutableListOf()
+                healthData.add(
+                    hashMapOf(
+                        "value" to 0,
+                        "date_from" to 0,
+                        "date_to" to 0,
+                        "unit" to "MINUTES",
+                        "source_name" to "ERROR",
+                        "source_id" to "ERROR"
+                    )
+                )
+                activity!!.runOnUiThread { result.success(healthData) }
+                Log.i("FLUTTER_HEALTH::ERROR", e3.message ?: "unknown error")
             }
         }
     }
